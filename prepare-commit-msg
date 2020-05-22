@@ -4,16 +4,28 @@ from subprocess import check_output
 
 # Function for color output
 def printRed(skk): 
-	print("[\033[96mprepare-commit-msg hook\033[00m] [\033[91mERROR\033[00m] \n\033[90m{}\033[00m" .format(skk)) 
+    print("[\033[96mprepare-commit-msg hook\033[00m] [\033[91mERROR\033[00m] \n\033[90m{}\033[00m" .format(skk)) 
 def printGreen(skk): 
-	print("[\033[96mprepare-commit-msg hook\033[00m] [\033[92mSUCCESS\033[00m] \n\033[90m{}\033[00m" .format(skk)) 
+    print("[\033[96mprepare-commit-msg hook\033[00m] [\033[92mSUCCESS\033[00m] \n\033[90m{}\033[00m" .format(skk)) 
 def printYellow(skk): 
-	print("[\033[96mprepare-commit-msg hook\033[00m] [\033[93mWARNING\033[00m] \n\033[90m{}\033[00m" .format(skk)) 
+    print("[\033[96mprepare-commit-msg hook\033[00m] [\033[93mWARNING\033[00m] \n\033[90m{}\033[00m" .format(skk)) 
  
 # Function to add featureNumber to the beginning of commit msg
 def setIssue(fh, featureNumber, commit_msg):
-	fh.seek(0, 0)
-	fh.write('[%s] %s' % (featureNumber, commit_msg))
+    fh.seek(0, 0)
+    fh.write('%s %s' % (featureNumber, commit_msg))
+
+def askUserWithoutLogic(mess):
+    user_input = check_output("read -p \" " + mess + "(Y/N): \" userinput && echo \"$userinput\"", shell=True, stdin=sys.stdin).rstrip().upper()
+    while user_input not in ['Y','N']:
+        user_input = check_output("read -p \" " + mess +" Please Y or N: \" userinput && echo \"$userinput\"", shell=True, stdin=sys.stdin).rstrip().upper()
+    if user_input == 'Y':
+        printGreen(msgSuccess)
+        return 0
+    elif user_input == 'N':
+        printYellow(msgCommitCanseled)
+        return 1
+
 
 
 sys.stdin = open("/dev/tty", "r")
@@ -23,7 +35,7 @@ commit_msg_filepath = sys.argv[1]
 branch = check_output(['git', 'symbolic-ref', '--short', 'HEAD']).strip()
 regexBranchAndFeature = '(develop)|((fix|feature|hotfix)\/(\w+-\d+))'
 regexIssueBranch = '\w+-\d+'
-regexIssue = '(\[\w+-\d+\])'
+regexIssue = '(\w+-\d+)'
 
 msgSuccess = 'Everything went well!'
 msgError = 'The JIRA ticker from message does not match the JIRA ticker in the branch name. \nPlease check the message.'
@@ -39,55 +51,30 @@ if listOfIssueBranch :
 		listOfIssueMsg = re.findall(regexIssue, commit_msg)
 		if listOfIssueMsg:
 			issueMSG = listOfIssueMsg[0]
-			withouScobs = issueMSG.replace('[', '').replace(']','')
-			if withouScobs == issueBranch:
+			if issueBranch in listOfIssueMsg:
 				printGreen(msgSuccess)
 				sys.exit(0)
 			else:
 				printRed(msgError)
-				user_input = check_output("read -p \"Do you want to add to the message with issue from branch name? (Y/N): \" userinput && echo \"$userinput\"", shell=True, stdin=sys.stdin).rstrip().upper()
-				while user_input not in ['Y','N']:
-					user_input = check_output("read -p \"Do you want to add to the message with issue from branch name? Please Y or N: \" userinput && echo \"$userinput\"", shell=True, stdin=sys.stdin).rstrip().upper()
-				if user_input == 'Y':
-					commit_msg = commit_msg.replace(issueMSG, '')
-					setIssue(fh, issueBranch, commit_msg)
-					printGreen(msgSuccess)
-					sys.exit(0)
-				elif user_input == 'N':
-					printYellow(msgCommitCanseled)
+				msg = 'Do you want to add to the message with issue from branch name?'
+				if askUserWithoutLogic(msg) == 1:
 					sys.exit(1)
+				else:
+					setIssue(fh, issueBranch, commit_msg)
+					sys.exit(0)
 		else:
 			printRed(msgError)
-			user_input = check_output("read -p \"Do you want to add to the message? (Y/N): \" userinput && echo \"$userinput\"", shell=True, stdin=sys.stdin).rstrip().upper()
-			while user_input not in ['Y','N']:
-				user_input = check_output("read -p \"Do you want to add to the message? Please Y or N: \" userinput && echo \"$userinput\"", shell=True, stdin=sys.stdin).rstrip().upper()
-			if user_input == 'Y':
-				setIssue(fh, issueBranch, commit_msg)
-				printGreen(msgSuccess)
-				sys.exit(0)
-			elif user_input == 'N':
-				printYellow(msgCommitCanseled)
+			msg = 'Do you want to add to the message?'
+			if askUserWithoutLogic(msg) == 1:
 				sys.exit(1)
+			else:
+				setIssue(fh, issueBranch, commit_msg)
+				sys.exit(0)
 elif branch not in ['master', 'develop']:
 	printRed(msgBranchNameError)
-	user_input = check_output("read -p \"Do you want to merge changes to a {branch} branch? (Y/N): \" userinput && echo \"$userinput\"", shell=True, stdin=sys.stdin).rstrip().upper()
-	while user_input not in ['Y','N']:
-		user_input = check_output("read -p \"Do you want to add to the message? Please Y or N: \" userinput && echo \"$userinput\"", shell=True, stdin=sys.stdin).rstrip().upper()
-	if user_input == 'Y':
-		printGreen(msgSuccess)
-		sys.exit(0)
-	elif user_input == 'N':
-		printYellow(msgCommitCanseled)
-		sys.exit(1)
+	msg = 'Do you want to merge changes to a {branch} branch?'
+	sys.exit(askUserWithoutLogic(msg))
 else:
 	printYellow(msgBranchNameErrorMaster)
-	user_input = check_output("read -p \"Are you sure you want to continue? (Y/N): \" userinput && echo \"$userinput\"", shell=True, stdin=sys.stdin).rstrip().upper()
-	while user_input not in ['Y','N']:
-		user_input = check_output("read -p \"Are you sure you want to continue? Please Y or N: \" userinput && echo \"$userinput\"", shell=True, stdin=sys.stdin).rstrip().upper()
-	if user_input == 'Y':
-		printGreen(msgSuccess)
-		sys.exit(0)
-	elif user_input == 'N':
-		printYellow(msgCommitCanseled)
-		sys.exit(1)
-
+	msg = 'Are you sure you want to continue?'
+	sys.exit(askUserWithoutLogic(msg))
