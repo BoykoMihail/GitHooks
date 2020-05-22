@@ -73,7 +73,6 @@ def runScript():
                     msg = 'Do you want to add to the message with issue from branch name?'
                     if askUserWithoutLogic(msg) == 1:
                         if isSourceTree:
-                            setIssue(fh, issueBranch, commit_msg)
                             sys.exit(0)
                         else:
                             sys.exit(1)
