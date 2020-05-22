@@ -1,2 +1,1 @@
 # GitHooks
-фыв
