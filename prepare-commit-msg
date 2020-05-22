@@ -17,20 +17,20 @@ isSourceTree = False
 
 # Function for color output
 def printRed(skk): 
-	if isSourceTree:
-		print skk
-	else:
-		print("[\033[96mprepare-commit-msg hook\033[00m] [\033[91mERROR\033[00m] \n\033[90m{}\033[00m" .format(skk)) 
+    if isSourceTree:
+        print skk
+    else:
+        print("[\033[96mprepare-commit-msg hook\033[00m] [\033[91mERROR\033[00m] \n\033[90m{}\033[00m" .format(skk)) 
 def printGreen(skk): 
-	if isSourceTree:
-		print skk
-	else:
-		print("[\033[96mprepare-commit-msg hook\033[00m] [\033[92mSUCCESS\033[00m] \n\033[90m{}\033[00m" .format(skk)) 
+    if isSourceTree:
+        print skk
+    else:
+        print("[\033[96mprepare-commit-msg hook\033[00m] [\033[92mSUCCESS\033[00m] \n\033[90m{}\033[00m" .format(skk)) 
 def printYellow(skk): 
-	if isSourceTree:
-		print skk
-	else:
-		print("[\033[96mprepare-commit-msg hook\033[00m] [\033[93mWARNING\033[00m] \n\033[90m{}\033[00m" .format(skk)) 
+    if isSourceTree:
+        print skk
+    else:
+        print("[\033[96mprepare-commit-msg hook\033[00m] [\033[93mWARNING\033[00m] \n\033[90m{}\033[00m" .format(skk)) 
  
 # Function to add featureNumber to the beginning of commit msg
 def setIssue(fh, featureNumber, commit_msg):
@@ -38,83 +38,83 @@ def setIssue(fh, featureNumber, commit_msg):
     fh.write('%s %s' % (featureNumber, commit_msg))
 
 def askUserWithoutLogic(mess):
-	if isSourceTree:
-		return 1
-	else: 
-	    user_input = check_output("read -p \"" + mess + "(Y/N): \" userinput && echo \"$userinput\"", shell=True, stdin=sys.stdin).rstrip().upper()
-	    while user_input not in ['Y','N']:
-	        user_input = check_output("read -p \"" + mess +" Please Y or N: \" userinput && echo \"$userinput\"", shell=True, stdin=sys.stdin).rstrip().upper()
-	    if user_input == 'Y':
-	        printGreen(msgSuccess)
-	        return 0
-	    elif user_input == 'N':
-	        printYellow(msgCommitCanseled)
-	        return 1
+    if isSourceTree:
+        return 1
+    else: 
+        user_input = check_output("read -p \"" + mess + "(Y/N): \" userinput && echo \"$userinput\"", shell=True, stdin=sys.stdin).rstrip().upper()
+        while user_input not in ['Y','N']:
+            user_input = check_output("read -p \"" + mess +" Please Y or N: \" userinput && echo \"$userinput\"", shell=True, stdin=sys.stdin).rstrip().upper()
+        if user_input == 'Y':
+            printGreen(msgSuccess)
+            return 0
+        elif user_input == 'N':
+            printYellow(msgCommitCanseled)
+            return 1
 
 def runScript():
 
-	commit_msg_filepath = sys.argv[1]
+    commit_msg_filepath = sys.argv[1]
 
-	branch = check_output(['git', 'symbolic-ref', '--short', 'HEAD']).strip()
+    branch = check_output(['git', 'symbolic-ref', '--short', 'HEAD']).strip()
 
-	with open(commit_msg_filepath, 'r+') as fh:
-		commit_msg = fh.read()
-		listOfIssueBranch = re.findall(regexIssueBranch, branch)
-		if listOfIssueBranch :
-			issueBranch = listOfIssueBranch[0]
-			listOfIssueMsg = re.findall(regexIssue, commit_msg)
-			if listOfIssueMsg:
-				issueMSG = listOfIssueMsg[0]
-				if issueBranch in listOfIssueMsg:
-					printGreen(msgSuccess)
-					sys.exit(0)
-				else:
-					printRed(msgError)
-					msg = 'Do you want to add to the message with issue from branch name?'
-					if askUserWithoutLogic(msg) == 1:
-						if isSourceTree:
-							setIssue(fh, issueBranch, commit_msg)
-							sys.exit(0)
-						else:
-							sys.exit(1)
-					else:
-						setIssue(fh, issueBranch, commit_msg)
-						sys.exit(0)
-			else:
-				printRed(msgError)
-				msg = 'Do you want to add to the message?'
-				if askUserWithoutLogic(msg) == 1:
-					if isSourceTree:
-						setIssue(fh, issueBranch, commit_msg)
-						sys.exit(0)
-					else:
-						sys.exit(1)
-				else:
-					setIssue(fh, issueBranch, commit_msg)
-					sys.exit(0)
-		elif branch not in ['master', 'develop']:
-			printRed(msgBranchNameError)
-			msg = 'Do you want to merge changes to ' + branch + ' branch?'
-			if isSourceTree:
-				issueBranch = "[without issue commit]"
-				setIssue(fh, issueBranch, commit_msg)
-				sys.exit(0)
-			else: 
-				sys.exit(askUserWithoutLogic(msg))
-		else:
-			printYellow(msgBranchNameErrorMaster)
-			msg = 'Are you sure you want to continue?'
-			if isSourceTree:
-				issueBranch = "[without issue commit]"
-				setIssue(fh, issueBranch, commit_msg)
-			else:
-				sys.exit(askUserWithoutLogic(msg))
+    with open(commit_msg_filepath, 'r+') as fh:
+        commit_msg = fh.read()
+        listOfIssueBranch = re.findall(regexIssueBranch, branch)
+        if listOfIssueBranch :
+            issueBranch = listOfIssueBranch[0]
+            listOfIssueMsg = re.findall(regexIssue, commit_msg)
+            if listOfIssueMsg:
+                issueMSG = listOfIssueMsg[0]
+                if issueBranch in listOfIssueMsg:
+                    printGreen(msgSuccess)
+                    sys.exit(0)
+                else:
+                    printRed(msgError)
+                    msg = 'Do you want to add to the message with issue from branch name?'
+                    if askUserWithoutLogic(msg) == 1:
+                        if isSourceTree:
+                            setIssue(fh, issueBranch, commit_msg)
+                            sys.exit(0)
+                        else:
+                            sys.exit(1)
+                    else:
+                        setIssue(fh, issueBranch, commit_msg)
+                        sys.exit(0)
+            else:
+                printRed(msgError)
+                msg = 'Do you want to add to the message?'
+                if askUserWithoutLogic(msg) == 1:
+                    if isSourceTree:
+                        setIssue(fh, issueBranch, commit_msg)
+                        sys.exit(0)
+                    else:
+                        sys.exit(1)
+                else:
+                    setIssue(fh, issueBranch, commit_msg)
+                    sys.exit(0)
+        elif branch not in ['master', 'develop']:
+            printRed(msgBranchNameError)
+            msg = 'Do you want to merge changes to ' + branch + ' branch?'
+            if isSourceTree:
+                issueBranch = "[without issue commit]"
+                setIssue(fh, issueBranch, commit_msg)
+                sys.exit(0)
+            else: 
+                sys.exit(askUserWithoutLogic(msg))
+        else:
+            printYellow(msgBranchNameErrorMaster)
+            msg = 'Are you sure you want to continue?'
+            if isSourceTree:
+                issueBranch = "[without issue commit]"
+                setIssue(fh, issueBranch, commit_msg)
+            else:
+                sys.exit(askUserWithoutLogic(msg))
 
 try:
-	sys.stdin = open("/dev/tty", "r")
-	isSourceTree = False
+    sys.stdin = open("/dev/tty", "r")
+    isSourceTree = False
 except Exception as e:
-	isSourceTree = True
+    isSourceTree = True
 
 runScript()
 
