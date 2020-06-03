@@ -35,7 +35,7 @@ def printYellow(skk):
 # Function to add featureNumber to the beginning of commit msg
 def setIssue(fh, featureNumber, commit_msg):
     fh.seek(0, 0)
-    fh.write('%s %s' % (featureNumber, commit_msg))
+    fh.write('%s: %s' % (featureNumber.upper(), commit_msg))
 
 def askUserWithoutLogic(mess):
     if isSourceTree:
