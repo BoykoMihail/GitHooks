@@ -1,4 +1,4 @@
-# hooks
+# GitHooks
 
 ### Проверено в следующий gui клиентах:
     - Sublime merge
