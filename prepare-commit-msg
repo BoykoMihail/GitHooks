@@ -34,18 +34,6 @@ def printColored(skk, color, mess):
         print(skk)
     else:
         print("[\033[96mprepare-commit-msg hook\033[00m] [\033[{}{}\033[00m] \n\033[90m{}\033[00m".format(color, mess, skk)) 
-
-# def printGreen(skk): 
-#     if isGUIClient:
-#         print skk
-#     else:
-#         print("[\033[96mprepare-commit-msg hook\033[00m] [\033[92mSUCCESS\033[00m] \n\033[90m{}\033[00m".format(skk)) 
-
-# def printYellow(skk): 
-#     if isGUIClient:
-#         print skk
-#     else:
-#         print("[\033[96mprepare-commit-msg hook\033[00m] [\033[93mWARNING\033[00m] \n\033[90m{}\033[00m".format(skk)) 
  
 # Function to add featureNumber to the beginning of commit msg
 def setIssue(fh, featureNumber, commit_msg):
@@ -64,11 +52,8 @@ def askUserWithoutLogic(mess, nowMess):
     if isGUIClient:
         return True
     else: 
-        # user_input = check_output("read -p \"" + mess + "(Y/N): \" userinput && echo \"$userinput\"", shell=True, stdin=sys.stdin).rstrip().upper()
-
         user_input = input(mess+"(Y/N): ").upper()
         while user_input not in ['Y','N']:
-            # user_input = check_output("read -p \"" + mess +" Please Y or N: \" userinput && echo \"$userinput\"", shell=True, stdin=sys.stdin).rstrip().upper()
             user_input = input(mess+"Please Y or N:").upper()
         if user_input == 'Y':
             printColored(msgSuccess, colorGreen, successMsg)
