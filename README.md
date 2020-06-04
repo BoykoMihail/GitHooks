@@ -1,6 +1,6 @@
 # GitHooks
 
-### Проверено в следующий gui клиентах:
+### Проверено в следующих gui клиентах:
     - Sublime merge
     - Fork
     - Tower

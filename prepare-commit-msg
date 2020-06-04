@@ -34,6 +34,18 @@ def printColored(skk, color, mess):
         print(skk)
     else:
         print("[\033[96mprepare-commit-msg hook\033[00m] [\033[{}{}\033[00m] \n\033[90m{}\033[00m".format(color, mess, skk)) 
+
+# def printGreen(skk): 
+#     if isGUIClient:
+#         print skk
+#     else:
+#         print("[\033[96mprepare-commit-msg hook\033[00m] [\033[92mSUCCESS\033[00m] \n\033[90m{}\033[00m".format(skk)) 
+
+# def printYellow(skk): 
+#     if isGUIClient:
+#         print skk
+#     else:
+#         print("[\033[96mprepare-commit-msg hook\033[00m] [\033[93mWARNING\033[00m] \n\033[90m{}\033[00m".format(skk)) 
  
 # Function to add featureNumber to the beginning of commit msg
 def setIssue(fh, featureNumber, commit_msg):
@@ -45,7 +57,7 @@ def writeMsg(fh, commit_msg):
     fh.write(commit_msg)
 
 def addWithoutIssueMsg(fh, commit_msg):
-    issueBranch = "[without issue commit]"
+    issueBranch = "[without issue]"
     setIssue(fh, issueBranch, commit_msg)
 
 def askUserWithoutLogic(mess, nowMess):
@@ -100,7 +112,7 @@ def branchDontContainsJiraTaskLogic(branch, fh, commit_msg):
     else: 
         sys.exit(askUserWithoutLogic(msg, msgCommitCanseled))
 
-def messegeContainsIssueNumberLogic(fh, issueBranch, listOfIssueMsg, commit_msg):
+def messageContainsIssueNumberLogic(fh, issueBranch, listOfIssueMsg, commit_msg):
     issueMSG = listOfIssueMsg[0]
 
     if issueBranch.upper() in listOfIssueMsg:
