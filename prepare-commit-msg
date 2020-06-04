@@ -34,18 +34,6 @@ def printColored(skk, color, mess):
         print(skk)
     else:
         print("[\033[96mprepare-commit-msg hook\033[00m] [\033[{}{}\033[00m] \n\033[90m{}\033[00m".format(color, mess, skk)) 
-
-# def printGreen(skk): 
-#     if isGUIClient:
-#         print skk
-#     else:
-#         print("[\033[96mprepare-commit-msg hook\033[00m] [\033[92mSUCCESS\033[00m] \n\033[90m{}\033[00m".format(skk)) 
-
-# def printYellow(skk): 
-#     if isGUIClient:
-#         print skk
-#     else:
-#         print("[\033[96mprepare-commit-msg hook\033[00m] [\033[93mWARNING\033[00m] \n\033[90m{}\033[00m".format(skk)) 
  
 # Function to add featureNumber to the beginning of commit msg
 def setIssue(fh, featureNumber, commit_msg):
