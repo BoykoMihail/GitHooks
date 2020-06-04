@@ -15,24 +15,34 @@ msgBranchNameErrorMaster = 'You are trying to commit to a develop/master branch'
 msgCommitCanseled = 'Commit cancelled'
 msgCommitWarning = 'Commit is succes, but Jira number does not match the number from the branch'
 
+colorRed = '91m'
+colorYellow = '93m'
+colorGreen = '92m'
+
+successMsg = 'SUCCESS'
+errorMsg = 'ERROR'
+warningMsg = 'WARNING'
+
 isGUIClient = False
 
 # Function for color output
-def printRed(skk): 
+def printColored(skk, color, mess): 
     if isGUIClient:
         print skk
     else:
-        print("[\033[96mprepare-commit-msg hook\033[00m] [\033[91mERROR\033[00m] \n\033[90m{}\033[00m" .format(skk)) 
-def printGreen(skk): 
-    if isGUIClient:
-        print skk
-    else:
-        print("[\033[96mprepare-commit-msg hook\033[00m] [\033[92mSUCCESS\033[00m] \n\033[90m{}\033[00m" .format(skk)) 
-def printYellow(skk): 
-    if isGUIClient:
-        print skk
-    else:
-        print("[\033[96mprepare-commit-msg hook\033[00m] [\033[93mWARNING\033[00m] \n\033[90m{}\033[00m" .format(skk)) 
+        print("[\033[96mprepare-commit-msg hook\033[00m] [\033[{}{}\033[00m] \n\033[90m{}\033[00m".format(color, mess, skk)) 
+
+# def printGreen(skk): 
+#     if isGUIClient:
+#         print skk
+#     else:
+#         print("[\033[96mprepare-commit-msg hook\033[00m] [\033[92mSUCCESS\033[00m] \n\033[90m{}\033[00m".format(skk)) 
+
+# def printYellow(skk): 
+#     if isGUIClient:
+#         print skk
+#     else:
+#         print("[\033[96mprepare-commit-msg hook\033[00m] [\033[93mWARNING\033[00m] \n\033[90m{}\033[00m".format(skk)) 
  
 # Function to add featureNumber to the beginning of commit msg
 def setIssue(fh, featureNumber, commit_msg):
@@ -49,26 +59,25 @@ def addWithotIssueMsg(fh, commit_msg):
 
 def askUserWithoutLogic(mess, nowMess):
     if isGUIClient:
-        return 1
+        return True
     else: 
         user_input = check_output("read -p \"" + mess + "(Y/N): \" userinput && echo \"$userinput\"", shell=True, stdin=sys.stdin).rstrip().upper()
         while user_input not in ['Y','N']:
             user_input = check_output("read -p \"" + mess +" Please Y or N: \" userinput && echo \"$userinput\"", shell=True, stdin=sys.stdin).rstrip().upper()
         if user_input == 'Y':
-            printGreen(msgSuccess)
-            return 0
+            printColored(msgSuccess, colorGreen, successMsg)
+            return False
         elif user_input == 'N':
-            printYellow(nowMess)
-            return 1
+            printColored(nowMess, colorYellow, warningMsg)
+            return True
 
 def masterOrDevBranchLogic(fh, commit_msg):
 
     listOfIssueMsgWithoutApper = re.findall(regexIssue, commit_msg)
     listOfIssueMsg = []
-    for issueMsg in listOfIssueMsgWithoutApper:
-        listOfIssueMsg.append(issueMsg.upper())
+    listOfIssueMsg = map(str.upper, listOfIssueMsgWithoutApper)
 
-    printYellow(msgBranchNameErrorMaster)
+    printColored(msgBranchNameErrorMaster, colorYellow, warningMsg)
     msg = 'Are you sure you want to continue?'
 
     if listOfIssueMsg:
@@ -81,7 +90,7 @@ def masterOrDevBranchLogic(fh, commit_msg):
         if isGUIClient:
             addWithotIssueMsg(fh, commit_msg)
         else:
-            if askUserWithoutLogic(msg, msgCommitCanseled) == 1:
+            if askUserWithoutLogic(msg, msgCommitCanseled):
                 sys.exit(1)
             else:
                 addWithotIssueMsg(fh, commit_msg)
@@ -89,7 +98,7 @@ def masterOrDevBranchLogic(fh, commit_msg):
     
 
 def branchDontContainsJiraTaskLogic(branch, fh, commit_msg):
-    printRed(msgBranchNameError)
+    printColored(msgBranchNameError, colorRed, errorMsg)
     msg = 'Do you want to merge changes to ' + branch + ' branch?'
     if isGUIClient:
         addWithotIssueMsg(fh, commit_msg)
@@ -101,13 +110,13 @@ def messegeContainsIssueNumberLogic(fh, issueBranch, listOfIssueMsg, commit_msg)
     issueMSG = listOfIssueMsg[0]
 
     if issueBranch.upper() in listOfIssueMsg:
-        printGreen(msgSuccess)
+        printColored(msgSuccess, colorGreen, successMsg)
         writeMsg(fh, commit_msg)
         sys.exit(0)
     else:
-        printRed(msgError)
+        printColored(msgError, colorRed, warningMsg)
         msg = 'Do you want to add to the message with issue from branch name?'
-        if askUserWithoutLogic(msg, msgCommitWarning) == 1:
+        if askUserWithoutLogic(msg, msgCommitWarning):
             if isGUIClient:
                 writeMsg(fh, commit_msg)
                 sys.exit(0)
@@ -119,9 +128,9 @@ def messegeContainsIssueNumberLogic(fh, issueBranch, listOfIssueMsg, commit_msg)
             sys.exit(0)
 
 def messegeDontContainsIssueNumberLogic(fh, issueBranch, commit_msg):
-    printRed(msgError)
+    printColored(msgError, colorRed, errorMsg)
     msg = 'Do you want to add to the message?'
-    if askUserWithoutLogic(msg, msgCommitCanseled) == 1:
+    if askUserWithoutLogic(msg, msgCommitCanseled):
         if isGUIClient:
             setIssue(fh, issueBranch, commit_msg)
             sys.exit(0)
@@ -137,7 +146,9 @@ def branchContainsJiraTaskLogic(fh, listOfIssueBranch, commit_msg):
     listOfIssueMsg = []
     for issueMsg in listOfIssueMsgWithoutApper:
         commit_msg = commit_msg.replace(issueMsg, issueMsg.upper())
+        # the card is not used, because the cycle is nevertheless needed to replace the numbers of jiracas from Jira in the upper case
         listOfIssueMsg.append(issueMsg.upper())
+
     if listOfIssueMsg:
         messegeContainsIssueNumberLogic(fh, issueBranch, listOfIssueMsg, commit_msg)
     else:
@@ -162,7 +173,7 @@ def runScript():
 try:
     sys.stdin = open("/dev/tty", "r")
     isGUIClient = False
-except Exception as e:
+except:
     isGUIClient = True
 
 runScript()
