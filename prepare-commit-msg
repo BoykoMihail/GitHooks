@@ -1,10 +1,13 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import sys, re
 from subprocess import check_output
+from sys import getdefaultencoding
+
+getdefaultencoding()  # utf-8
 
 regexBranchAndFeature = '(develop)|((fix|feature|hotfix)\/(\w+-\d+))'
-regexIssueBranch = '\w+-\d+'
+regexIssueBranch = re.compile(b'\w+-\d+')
 regexIssue = '(\w+-\d+)'
 
 msgSuccess = 'Everything went well!'
@@ -28,7 +31,7 @@ isGUIClient = False
 # Function for color output
 def printColored(skk, color, mess): 
     if isGUIClient:
-        print skk
+        print(skk)
     else:
         print("[\033[96mprepare-commit-msg hook\033[00m] [\033[{}{}\033[00m] \n\033[90m{}\033[00m".format(color, mess, skk)) 
 
@@ -51,9 +54,9 @@ def setIssue(fh, featureNumber, commit_msg):
 
 def writeMsg(fh, commit_msg):
     fh.seek(0, 0)
-    fh.write('{0}'.format(commit_msg))
+    fh.write(commit_msg)
 
-def addWithotIssueMsg(fh, commit_msg):
+def addWithoutIssueMsg(fh, commit_msg):
     issueBranch = "[without issue commit]"
     setIssue(fh, issueBranch, commit_msg)
 
@@ -61,9 +64,12 @@ def askUserWithoutLogic(mess, nowMess):
     if isGUIClient:
         return True
     else: 
-        user_input = check_output("read -p \"" + mess + "(Y/N): \" userinput && echo \"$userinput\"", shell=True, stdin=sys.stdin).rstrip().upper()
+        # user_input = check_output("read -p \"" + mess + "(Y/N): \" userinput && echo \"$userinput\"", shell=True, stdin=sys.stdin).rstrip().upper()
+
+        user_input = input(mess+"(Y/N): ").upper()
         while user_input not in ['Y','N']:
-            user_input = check_output("read -p \"" + mess +" Please Y or N: \" userinput && echo \"$userinput\"", shell=True, stdin=sys.stdin).rstrip().upper()
+            # user_input = check_output("read -p \"" + mess +" Please Y or N: \" userinput && echo \"$userinput\"", shell=True, stdin=sys.stdin).rstrip().upper()
+            user_input = input(mess+"Please Y or N:").upper()
         if user_input == 'Y':
             printColored(msgSuccess, colorGreen, successMsg)
             return False
@@ -88,12 +94,12 @@ def masterOrDevBranchLogic(fh, commit_msg):
             sys.exit(askUserWithoutLogic(msg, msgCommitCanseled))
     else:
         if isGUIClient:
-            addWithotIssueMsg(fh, commit_msg)
+            addWithoutIssueMsg(fh, commit_msg)
         else:
             if askUserWithoutLogic(msg, msgCommitCanseled):
                 sys.exit(1)
             else:
-                addWithotIssueMsg(fh, commit_msg)
+                addWithoutIssueMsg(fh, commit_msg)
 
     
 
@@ -101,7 +107,7 @@ def branchDontContainsJiraTaskLogic(branch, fh, commit_msg):
     printColored(msgBranchNameError, colorRed, errorMsg)
     msg = 'Do you want to merge changes to ' + branch + ' branch?'
     if isGUIClient:
-        addWithotIssueMsg(fh, commit_msg)
+        addWithoutIssueMsg(fh, commit_msg)
         sys.exit(0)
     else: 
         sys.exit(askUserWithoutLogic(msg, msgCommitCanseled))
@@ -163,7 +169,8 @@ def runScript():
     with open(commit_msg_filepath, 'r+') as fh:
         commit_msg = fh.read()
         listOfIssueBranch = re.findall(regexIssueBranch, branch)
-        if listOfIssueBranch :
+        listOfIssueBranch = list(map(bytes.decode, listOfIssueBranch))
+        if listOfIssueBranch:
             branchContainsJiraTaskLogic(fh, listOfIssueBranch, commit_msg)
         elif branch not in ['master', 'develop']:
             branchDontContainsJiraTaskLogic(branch, fh, commit_msg)
