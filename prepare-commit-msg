@@ -67,13 +67,16 @@ def askUserWithoutLogic(mess, nowMess):
             printColored(nowMess, colorYellow, warningMsg)
             return True
 
+def isEmphtyMap(listOfIssueMsg):
+    return len(list(listOfIssueMsg)) == 0
+
 def masterOrDevBranchLogic(fh, commit_msg):
     listOfIssueMsgWithoutApper = re.findall(regexIssue, commit_msg)
     listOfIssueMsg = []
     listOfIssueMsg = map(str.upper, listOfIssueMsgWithoutApper)
     printColored(msgBranchNameErrorMaster, colorYellow, warningMsg)
     msg = 'Are you sure you want to continue?'
-    if listOfIssueMsg:
+    if not isEmphtyMap(listOfIssueMsg):
         if isGUIClient:
             writeMsg(fh, commit_msg)
             sys.exit(0)
@@ -160,7 +163,7 @@ def runScript():
         listOfIssueBranch = re.findall(regexIssueBranch, branch)
         listOfIssueBranch = list(map(bytes.decode, listOfIssueBranch))
         branch = bytes.decode(branch)
-        if listOfIssueBranch:
+        if not isEmphtyMap(listOfIssueBranch):
             branchContainsJiraTaskLogic(fh, listOfIssueBranch, commit_msg)
         elif branch not in ['master', 'develop']:
             branchDontContainsJiraTaskLogic(branch, fh, commit_msg)
