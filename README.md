@@ -16,14 +16,17 @@
 <table>
        <thead>
            <tr>
-               <th>Layer 1</th>
-               <th>Layer 2</th>
-               <th>Layer 3</th>
+               <th>----</th>
+               <th>Название ветки корректно</th>
+               <th>Название ветки некорректно</th>
+               <th>Название ветки является служебным|</th>
            </tr>
        </thead>
        <tbody>
            <tr>
                <td rowspan=4>L1 Name</td>
+               <td rowspan=4>L1 Name 2</td>
+               <td rowspan=4>L1 Name 3</td>
                <td rowspan=2>L2 Name A</td>
                <td>L3 Name A</td>
            </tr>
