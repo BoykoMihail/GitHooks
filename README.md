@@ -1,5 +1,8 @@
 # GitHooks
 
+## Установка:
+Скопировать файл "prepare-commit-msg" в папку ./git/hooks
+
 ### Проверено в следующих GUI-клиентах:
     - Sublime merge
     - Fork
