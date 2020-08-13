@@ -12,7 +12,7 @@
     - SourceTree
     - GitKraken 
     
-    
+## Как работает:
 <table>
        <thead>
            <tr>
@@ -57,28 +57,27 @@
        </tbody>
 </table>
     
-## Как работает:
-### Возможны всего 4 сценария:
-1) Ветка называться [feature|fix|hotfix]/[abc-123]_... и в сообщении комментария та же issue из Jira (В формате ABCD-1234), что и в названии ветки. 
-Терминал: В этом случае происходит коммит и текст не меняется.
-GUI-клиент: В этом случае происходит коммит и текст не меняется.
-<img src="Images/hook_1.png" width="100" height="100">
-2) В сообщении к коммиту нет issue, а в названии ветки issue есть.
-Терминал: В этом случае спрашиваем у пользователя добавить issue в текст сообщения или нет. В зависимости от ответа добавляем issue в текст сообщения в формате "issue: text" (ответ "Y") или коммит не происходит (ответ "N"). 
-GUI-клиент: В этом случае к тексту сообщения добавляется issue из названия ветки в формате "issueInBranch: text"
-![Hook Image 2](Images/hook_2.png){:height="150px" width="150px"}
-3) В сообщении к коммиту (issueInMessage) и в названии ветки (issueInBranch) есть issue, но они не совпадают.
-Терминал: В этом случае спрашиваем добавить или нет issue из названия ветки. В зависимости от ответа либо добавляем issue из названия ветки в текст сообщения в формате "issueInMessage_issueInBranch: text" (ответ "Y"), либо оставляем текст сообщения неизменным (ответ "N"). 
-GUI-клиент: В этом случае происходит коммит и текст не меняется.
-![Hook Image 3](Images/hook_3.png){:height="150px" width="150px"}
-4) Текущая ветка либо master либо develop:
-Терминал: В этом случае выводим WARNING с предупреждающим текстом и спрашиваем продолжить или нет. В зависимости от ответа, либо коммит происходит с текстом в формате "[WITHOUT ISSUE]: text" (ответ "Y"), либо коммит не происходит (ответ "N").
-GUI-клиент:  В этом случае происходит коммит с текстом в формате "[WITHOUT ISSUE]: text".
-![Hook Image 4](Images/hook_4.png){:height="150px" width="150px"}
-5) Название текущей ветки некорректное:
-Терминал: В этом случае выводим ERROR с предупреждающим текстом и спрашиваем продолжить или нет. В зависимости от ответа коммит происходит (ответ "Y"), либо отменяется (ответ "N").
-GUI-клиент: В этом случае происходит коммит с текстом в формате "[WITHOUT ISSUE]: text".
-![Hook Image 5](Images/hook_5.png){:height="150px" width="150px"}
+## Изображения работы:
+<figure class="image">
+  <img src="Images/hook_1.png" width="250" height="250">
+  <figcaption>{{ "рис. 1" }}</figcaption>
+</figure>
+<figure class="image">
+  <img src="Images/hook_2.png" width="250" height="250">
+  <figcaption>{{ "рис. 2" }}</figcaption>
+</figure>
+<figure class="image">
+  <img src="Images/hook_3.png" width="250" height="250">
+  <figcaption>{{ "рис. 3" }}</figcaption>
+</figure>
+<figure class="image">
+  <img src="Images/hook_4.png" width="250" height="250">
+  <figcaption>{{ "рис. 4" }}</figcaption>
+</figure>
+<figure class="image">
+  <img src="Images/hook_5.png" width="250" height="250">
+  <figcaption>{{ "рис. 5" }}</figcaption>
+</figure>
 
 
 ## Дополнительная фича:
