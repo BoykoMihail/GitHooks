@@ -4,7 +4,6 @@
 Скопировать файл "prepare-commit-msg" в папку ./git/hooks Вашего репозитория.
 Необходима команда chmod +x prepare-commit-msg в папке с хуками (.git/hooks)
  
- 
 ## Проверено в следующих GUI-клиентах:
     - Sublime merge
     - Fork
@@ -65,7 +64,10 @@
 | <figure style="display:inline-block; border: 1px dotted gray;"> <img src="Images/hook_3.png" width="400" height="300"> <figcaption style="text-align:center">рис. 3</figcaption> </figure> | <figure style="display:inline-block; border: 1px dotted gray;"> <img src="Images/hook_4.png" width="400" height="300"> <figcaption style="text-align:center">рис. 4</figcaption> </figure> 
 | <figure style="display:inline-block; border: 1px dotted gray;"> <img src="Images/hook_5.png" width="400" height="300"> <figcaption style="text-align:center">рис. 5</figcaption> </figure> |  |
 
+
+## Диаграмма работы:
+<figure style="display:inline-block; border: 1px dotted gray;"> <img src="Images/git_hook.png" width="672" height="378"> <figcaption style="text-align:center">Общая схема работы</figcaption> </figure>
+    
+
 ## Дополнительная фича:
 - Если в тексте сообщения указана issue строчными буквами, то хук автоматически меняет их на заглавные.
-
-    
