@@ -65,7 +65,7 @@
 | <figure style="display:inline-block; border: 1px dotted gray;"> <img src="Images/hook_5.png" width="400" height="300"> <figcaption style="text-align:center">рис. 5</figcaption> </figure> |  |
 
 
-## Диаграмма работы:
+## В виде схемы:
 <figure style="display:inline-block; border: 1px dotted gray;"> <img src="Images/git_hook.png" width="672" height="378"> <figcaption style="text-align:center">Общая схема работы</figcaption> </figure>
     
 
