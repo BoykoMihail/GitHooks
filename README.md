@@ -66,7 +66,11 @@
 
 
 ## В виде схемы:
-<figure style="display:inline-block; border: 1px dotted gray;"> <img src="Images/git_hook.png" width="672" height="378"> <figcaption style="text-align:center">Общая схема работы</figcaption> </figure>
+<p align="center">
+    <figure style="display:inline-block; border: 1px dotted gray;">
+        <img width="672" height="378" src="Images/git_hook.png">
+    </figure>
+</p>
     
 
 ## Дополнительная фича:
