@@ -60,7 +60,7 @@
 ## Изображения работы:
 
 | | |
-|:-------------------------:|:-------------------------:|
+|-------------------------|-------------------------|
 |  <figure style="display:inline-block; border: 1px dotted gray;"> <img src="Images/hook_1.png" width="400" height="300"> <figcaption style="text-align:center"><br> рис. 1<br> Название ветки корректно и issue из текста сообщения совпадает с issue в названии ветки</figcaption> </figure> |  <figure style="display:inline-block; border: 1px dotted gray;"><img src="Images/hook_2.png" width="400" height="300"><figcaption style="text-align:center"><br>рис. 2<br>Название ветки корректно, но в тексте сообщения нет issue</figcaption> </figure> 
 | <figure style="display:inline-block; border: 1px dotted gray;"> <img src="Images/hook_3.png" width="400" height="300"> <figcaption style="text-align:center">рис. 3</figcaption> </figure> | <figure style="display:inline-block; border: 1px dotted gray;"> <img src="Images/hook_4.png" width="400" height="300"> <figcaption style="text-align:center">рис. 4</figcaption> </figure> 
 | <figure style="display:inline-block; border: 1px dotted gray;"> <img src="Images/hook_5.png" width="400" height="300"> <figcaption style="text-align:center">рис. 5</figcaption> </figure> |  |
