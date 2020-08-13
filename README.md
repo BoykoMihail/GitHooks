@@ -66,11 +66,11 @@
 
 
 ## В виде схемы:
-<p align="center">
-    <figure style="display:inline-block; border: 1px dotted gray;">
+<figure style="display:inline-block; border: 1px dotted gray;">
+    <p align="center">
         <img width="672" height="378" src="Images/git_hook.png">
-    </figure>
-</p>
+    </p>
+</figure>
     
 
 ## Дополнительная фича:
