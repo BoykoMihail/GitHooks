@@ -24,21 +24,23 @@
        </thead>
        <tbody>
            <tr>
+               <td>Текст в сообщении содержит issue, совпадающий с issue в имени ветки</td>
+               <td rowspan=4>Терминал: В этом случае происходит коммит и текст не меняется. </td>
+               <td rowspan=2>GUI-клиент: В этом случае происходит коммит и текст не меняется.</td>
+               <td>-</td>
+               <td>-</td>
+           </tr>
+           <tr>
+               <td>Текст в сообщении содержит issue, не совпадающий с issue в имени ветки</td>
                <td rowspan=4>L1 Name</td>
-               <td rowspan=4>L1 Name 2</td>
-               <td rowspan=4>L1 Name 3</td>
                <td rowspan=2>L2 Name A</td>
                <td>L3 Name A</td>
            </tr>
            <tr>
-               <td>L3 Name B</td>
-           </tr>
-           <tr>
-               <td rowspan=2>L2 Name B</td>
-               <td>L3 Name C</td>
-           </tr>
-           <tr>
-               <td>L3 Name D</td>
+               <td>Текст в сообщении не содержит issue</td>
+               <td rowspan=4>L1 Name</td>
+               <td rowspan=2>L2 Name A</td>
+               <td>L3 Name A</td>
            </tr>
        </tbody>
 </table>
