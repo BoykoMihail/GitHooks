@@ -58,12 +58,26 @@
 </table>
     
 ## Изображения работы:
-<img src="Images/hook_1.png" alt="рис. 1" width="250" height="250">
-<img src="Images/hook_2.png" alt="рис. 1" width="250" height="250">
-<img src="Images/hook_3.png" alt="рис. 1" width="250" height="250">
-<img src="Images/hook_4.png" alt="рис. 1" width="250" height="250">
-<img src="Images/hook_5.png" alt="рис. 1" width="250" height="250">
-
+<figure>
+  <img src="Images/hook_1.png" width="400" height="300">
+  <figcaption text-align: center>рис. 1</figcaption>
+</figure>
+<figure>
+  <img src="Images/hook_2.png" width="400" height="300">
+  <figcaption text-align: center>рис. 2</figcaption>
+</figure>
+<figure>
+  <img src="Images/hook_3.png" width="400" height="300">
+  <figcaption text-align: center>рис. 3</figcaption>
+</figure>
+<figure>
+  <img src="Images/hook_4.png" width="400" height="300">
+  <figcaption text-align: center>рис. 4</figcaption>
+</figure>
+<figure>
+  <img src="Images/hook_5.png" width="400" height="300">
+  <figcaption text-align: center>рис. 5</figcaption>
+</figure>
 
 
 ## Дополнительная фича:
