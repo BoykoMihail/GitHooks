@@ -1,8 +1,8 @@
 # GitHooks
 
-## Установка:
+## Использование:
 Скопировать файл "prepare-commit-msg" в папку ./git/hooks Вашего репозитория.
-Для GitKraken необходима команда chmod +x prepare-commit-msg в папке с хуками (.git/hooks)
+Необходима команда chmod +x prepare-commit-msg в папке с хуками (.git/hooks)
  
  
 ## Проверено в следующих GUI-клиентах:
