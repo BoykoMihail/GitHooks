@@ -58,26 +58,28 @@
 </table>
     
 ## Изображения работы:
-<figure>
-  <img src="Images/hook_1.png" width="400" height="300">
-  <figcaption text-align: center>рис. 1</figcaption>
-</figure>
-<figure>
-  <img src="Images/hook_2.png" width="400" height="300">
-  <figcaption text-align: center>рис. 2</figcaption>
-</figure>
-<figure>
-  <img src="Images/hook_3.png" width="400" height="300">
-  <figcaption text-align: center>рис. 3</figcaption>
-</figure>
-<figure>
-  <img src="Images/hook_4.png" width="400" height="300">
-  <figcaption text-align: center>рис. 4</figcaption>
-</figure>
-<figure>
-  <img src="Images/hook_5.png" width="400" height="300">
-  <figcaption text-align: center>рис. 5</figcaption>
-</figure>
+<div style="text-align:center">
+    <figure style="display:inline-block; border: 1px dotted gray;">
+        <img src="Images/hook_1.png" width="400" height="300">
+        <figcaption style="text-align:center">рис. 1</figcaption>
+    </figure>
+    <figure style="display:inline-block; border: 1px dotted gray;">
+        <img src="Images/hook_2.png" width="400" height="300">
+        <figcaption style="text-align:center">рис. 2</figcaption>
+    </figure>
+    <figure style="display:inline-block; border: 1px dotted gray;">
+        <img src="Images/hook_3.png" width="400" height="300">
+        <figcaption style="text-align:center">рис. 3</figcaption> 
+    </figure>
+    <figure style="display:inline-block; border: 1px dotted gray;">
+        <img src="Images/hook_4.png" width="400" height="300">
+        <figcaption style="text-align:center">рис. 4</figcaption>
+    </figure>
+    <figure style="display:inline-block; border: 1px dotted gray;">
+        <img src="Images/hook_5.png" width="400" height="300">
+        <figcaption style="text-align:center">рис. 5</figcaption>
+    </figure>
+</div>
 
 
 ## Дополнительная фича:
