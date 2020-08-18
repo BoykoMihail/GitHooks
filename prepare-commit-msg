@@ -1,0 +1,180 @@
+#!/usr/bin/env python3
+
+import sys, re
+from subprocess import check_output
+from sys import getdefaultencoding
+
+getdefaultencoding()  # utf-8
+
+regex_branch_and_feature = '(develop)|((fix|feature|hotfix)\/(\w+-\d+))'
+regex_issue_branch = re.compile(b'\w+-\d+')
+regex_issue = '(\w+-\d+)'
+
+msg_success = 'Everything went well!'
+msg_error = 'The JIRA ticker from message does not match the JIRA ticker in the branch name. \nPlease check the message.'
+msg_error_not_upper = 'Please enter the Jira number in capital letters'
+msg_branch_name_error = 'Incorrect branch name. I can not find the JIRA ticker'
+msg_branch_name_error_master = 'You are trying to commit to a develop/master branch'
+msg_commit_canseled = 'Commit cancelled'
+msg_commit_warning = 'Commit is succes, but Jira number does not match the number from the branch'
+
+color_red = '91m'
+color_yellow = '93m'
+color_green = '92m'
+
+success_msg = 'SUCCESS'
+error_msg = 'ERROR'
+warning_msg = 'WARNING'
+
+is_GUI_client = False
+
+# Function for color output
+def print_сolored(skk, color, mess): 
+    if is_GUI_client:
+        print(skk)
+    else:
+        print("[\033[96mprepare-commit-msg hook\033[00m] [\033[{}{}\033[00m] \n\033[90m{}\033[00m".format(color, mess, skk)) 
+ 
+# Function to add featureNumber to the beginning of commit msg
+def set_issue(fh, feature_number, commit_msg, list_of_issue_MSG):
+    commit_msg_new = commit_msg
+    if list_of_issue_MSG and feature_number.upper() not in list_of_issue_MSG:
+        commit_msg_new = commit_msg_new.replace(":", '_{0}{1}'.format(feature_number.upper(), ':'))
+    else:
+        commit_msg_new = '{0}: {1}'.format(feature_number.upper(), commit_msg_new)
+    fh.seek(0, 0)
+    fh.write(commit_msg_new)
+
+def write_msg(fh, commit_msg):
+    fh.seek(0, 0)
+    fh.write(commit_msg)
+
+def add_without_issue_msg(fh, commit_msg):
+    issue_branch = "[without issue]"
+    set_issue(fh, issue_branch, commit_msg, [])
+
+def ask_user_without_logic(mess, now_mess):
+    if is_GUI_client:
+        return True
+    else: 
+        user_input = input(mess+"(Y/N): ").upper()
+        while user_input not in ['Y','N']:
+            user_input = input(mess+"Please Y or N:").upper()
+        if user_input == 'Y':
+            print_сolored(msg_success, color_green, success_msg)
+            return False
+        elif user_input == 'N':
+            print_сolored(now_mess, color_yellow, warning_msg)
+            return True
+
+def is_emphty_map(list_of_issue_msg):
+    return len(list(list_of_issue_msg)) == 0
+
+def master_or_dev_branch_logic(fh, commit_msg):
+    list_of_issue_msg_without_apper = re.findall(regex_issue, commit_msg)
+    list_of_issue_msg = []
+    list_of_issue_msg = map(str.upper, list_of_issue_msg_without_apper)
+    print_сolored(msg_branch_name_error_master, color_yellow, warning_msg)
+    msg = 'Are you sure you want to continue?'
+    if not is_emphty_map(list_of_issue_msg):
+        if is_GUI_client:
+            write_msg(fh, commit_msg)
+            sys.exit(0)
+        else:
+            ask_and_choice(fh, msg, msg_commit_canseled, commit_msg)
+    else:
+        if is_GUI_client:
+            add_without_issue_msg(fh, commit_msg)
+        else:
+            ask_and_choice(fh, msg, msg_commit_canseled, commit_msg)
+
+def ask_and_choice(fh, msg, msg_commit_canseled, commit_msg):
+    if ask_user_without_logic(msg, msg_commit_canseled):
+        sys.exit(1)
+    else:
+        add_without_issue_msg(fh, commit_msg)
+
+def branch_dont_contains_jira_task_logic(branch, fh, commit_msg):
+    print_сolored(msg_branch_name_error, color_red, error_msg)
+    msg = 'Do you want to merge changes to ' + branch + ' branch?'
+    if is_GUI_client:
+        add_without_issue_msg(fh, commit_msg)
+        sys.exit(0)
+    else: 
+        sys.exit(ask_user_without_logic(msg, msg_commit_canseled))
+
+def message_contains_issue_number_logic(fh, issue_branch, list_of_issue_msg, commit_msg):
+    issue_MSG = list_of_issue_msg[0]
+
+    if issue_branch.upper() in list_of_issue_msg:
+        print_сolored(msg_success, color_green, success_msg)
+        write_msg(fh, commit_msg)
+        sys.exit(0)
+    else:
+        print_сolored(msg_error, color_red, warning_msg)
+        msg = 'Do you want to add to the message with issue from branch name?'
+        if ask_user_without_logic(msg, msg_commit_warning):
+            if is_GUI_client:
+                write_msg(fh, commit_msg)
+                sys.exit(0)
+            else:
+                write_msg(fh, commit_msg)
+                sys.exit(0)
+        else:
+            set_issue(fh, issue_branch, commit_msg, list_of_issue_msg)
+            sys.exit(0)
+
+def messege_dont_contains_issue_number_logic(fh, issue_branch, commit_msg):
+    print_сolored(msg_error, color_red, error_msg)
+    msg = 'Do you want to add to the message?'
+    if ask_user_without_logic(msg, msg_commit_canseled):
+        if is_GUI_client:
+            set_issue(fh, issue_branch, commit_msg, [])
+            sys.exit(0)
+        else:
+            sys.exit(1)
+    else:
+        set_issue(fh, issue_branch, commit_msg, [])
+        sys.exit(0)
+
+def branch_contains_jira_task_logic(fh, list_of_issue_branch, commit_msg):
+    issue_branch = list_of_issue_branch[0]
+    list_of_issue_msg_without_apper = re.findall(regex_issue, commit_msg)
+    list_of_issue_msg = []
+    commit_msg_new = commit_msg
+    for issue_MSG in list_of_issue_msg_without_apper:
+        commit_msg_new = commit_msg_new.replace(issue_MSG, issue_MSG.upper())
+        # the card is not used, because the cycle is nevertheless needed to replace the numbers of jiracas from Jira in the upper case
+        list_of_issue_msg.append(issue_MSG.upper())
+
+    if list_of_issue_msg:
+        message_contains_issue_number_logic(fh, issue_branch, list_of_issue_msg, commit_msg_new)
+    else:
+        messege_dont_contains_issue_number_logic(fh, issue_branch, commit_msg_new)
+
+def run_script():
+
+    commit_msg_filepath = sys.argv[1]
+
+    branch = check_output(['git', 'symbolic-ref', '--short', 'HEAD']).strip()
+
+    with open(commit_msg_filepath, 'r+') as fh:
+        commit_msg = fh.read()
+        list_of_issue_branch = re.findall(regex_issue_branch, branch)
+        list_of_issue_branch = list(map(bytes.decode, list_of_issue_branch))
+        branch = bytes.decode(branch)
+        if not is_emphty_map(list_of_issue_branch):
+            branch_contains_jira_task_logic(fh, list_of_issue_branch, commit_msg)
+        elif branch not in ['master', 'develop']:
+            branch_dont_contains_jira_task_logic(branch, fh, commit_msg)
+        else:
+            master_or_dev_branch_logic(fh, commit_msg)
+
+try:
+    sys.stdin = open("/dev/tty", "r")
+    is_GUI_client = False
+except:
+    is_GUI_client = True
+
+run_script()
+
